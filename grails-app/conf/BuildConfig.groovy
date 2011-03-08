@@ -13,18 +13,18 @@ grails.project.dependency.resolution = {
         grailsPlugins()
         grailsHome()
         grailsCentral()
+        mavenCentral()
 
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
         //mavenLocal()
-        //mavenCentral()
         //mavenRepo "http://snapshots.repository.codehaus.org"
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
     }
 	plugins {
-		compile ":redis:1.0.0.M1"
+		compile ":redis:1.0.0.M2"
 		runtime ":blueprint:0.9.1"
 		build ":tomcat:1.3.5"
 	}
