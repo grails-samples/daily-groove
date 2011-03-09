@@ -1,10 +1,9 @@
+import grails.converters.JSON
+
 // locations to search for config files that get merged into the main config
 // config files can either be Java properties files or ConfigSlurper scripts
 
-// grails.config.locations = [ "classpath:${appName}-config.properties",
-//                             "classpath:${appName}-config.groovy",
-//                             "file:${userHome}/.grails/${appName}-config.properties",
-//                             "file:${userHome}/.grails/${appName}-config.groovy"]
+grails.config.locations = ["file:${userHome}/.grails/settings.groovy"]
 
 // if(System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
@@ -52,6 +51,17 @@ grails.spring.bean.packages = []
 environments {
     production {
         grails.serverURL = "http://www.changeme.com"
+
+        def vmcServices = System.getenv("VMC_SERVICES")
+        if (vmcServices) {
+            def props = JSON.parse(vmcServices).find { it.name == "dgroove-redis" }.options
+            grails.redis.host=props.hostname
+            grails.redis.port=props.port
+            grails.redis.password=props.password
+            grails.redis.pooled=true
+            grails.redis.resources=15
+            grails.redis.timeout=5000
+        }
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
@@ -61,6 +71,7 @@ environments {
     }
 
 }
+
 
 // log4j configuration
 log4j = {
