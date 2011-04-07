@@ -1,7 +1,19 @@
 package daily.groove
 
+import static daily.groove.Constants.*
+
 class ArticleController {
+    private static final SAMPLE_FEEDS = [
+            "http://feeds.bbci.co.uk/news/rss.xml": "BBC News",
+            "http://www.theregister.co.uk/headlines.rss": "The Register",
+            "http://www.theonion.com/feeds/daily/": "The Onion",
+            "http://grails.org/plugin/latest?format=rss": "Grails Plugins",
+            "http://groovyblogs.org/feed/rss": "Groovy Blogs",
+            "http://rss.slashdot.org/Slashdot/slashdot": "Slashdot",
+            "http://blog.springsource.com/feed/": "SpringSource Team Blog"]
+
     def articleService
+    def redis
 
     def index = { 
         redirect action:'all'
@@ -9,7 +21,7 @@ class ArticleController {
     
     def addFeed = {
         try {
-            articleService.loadFeed(new XmlSlurper().parseText(new URL(params.url).text))
+            articleService.loadFeed(params.url, new XmlSlurper().parseText(new URL(params.url).text))
         }
         catch(e) {
             flash.message = "Error processing feed. Please try again later."
@@ -21,7 +33,11 @@ class ArticleController {
     def all = {
         def sort = [sort:"dateCreated", order:"desc", max:10]
         def unreadItems = Article.findAllByUnread(true, sort)
-        [latestArticles:Article.list(sort), unreadItems:unreadItems]
+        
+        [ latestArticles:Article.list(sort),
+          unreadItems:unreadItems,
+          sampleFeed:articleService.randomSampleFeed(),
+          subscribedFeeds:articleService.subscribedFeeds()*.name]
     }
     
     def show = {
@@ -36,8 +52,20 @@ class ArticleController {
         article.save(flush:true)
         
         render template:"articlePreview", model:[article:article]
-    }    
-    def test = {
-        render "all = ${Article.countByUnread(true)}"
+    }
+    
+    def sampleFeed = {
+        render template:"sampleFeed", model:[sampleFeed:articleService.randomSampleFeed()]
+    }
+    
+    def loadData = {
+        if (!redis.scard(SAMPLE_FEEDS_KEY)) {
+            SAMPLE_FEEDS.each { url, name ->
+                redis.set url, name
+                redis.sadd SAMPLE_FEEDS_KEY, url
+            }
+        }
+        
+        redirect action: "all"
     }
 }
