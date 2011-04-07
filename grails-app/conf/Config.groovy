@@ -51,17 +51,6 @@ grails.spring.bean.packages = []
 environments {
     production {
         grails.serverURL = "http://www.changeme.com"
-
-        def vmcServices = System.getenv("VMC_SERVICES")
-        if (vmcServices) {
-            def props = JSON.parse(vmcServices).find { it.name == "dgroove-redis" }.options
-            grails.redis.host=props.hostname
-            grails.redis.port=props.port
-            grails.redis.password=props.password
-            grails.redis.pooled=true
-            grails.redis.resources=15
-            grails.redis.timeout=5000
-        }
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
