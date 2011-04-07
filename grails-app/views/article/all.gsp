@@ -1,6 +1,5 @@
 <html>
 	<head>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<meta name="layout" content="news">
 		<title>The Daily Groove</title>
 		

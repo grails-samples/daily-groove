@@ -87,16 +87,6 @@
             content you may choose. Below is a list of controllers that are currently deployed in this application,
             click on each to execute its default action:</p>
 
-            <table>
-                <tr>
-                    <th>Enviroment Variable</th>
-                    <th>Value</th>
-                </tr>
-                <g:each in="['VMC_APP_NAME', 'VMC_APP_VERSION', 'VMC_APP_HOST', 'VMC_APP_PORT', 'VMC_APP_ID', 'VMC_APP_INSTANCE', 'VMC_SERVICES']" var="var">
-                    <tr><td>${var}</td><td>${System.getenv(var)}</td></tr>
-                </g:each>
-            </table>
-
             <div id="controllerList" class="dialog">
                 <h2>Available Controllers:</h2>
                 <ul>
