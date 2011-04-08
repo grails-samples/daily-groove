@@ -36,7 +36,7 @@ setInterval(updateSampleFeed, 5000)
 				<g:form action="addFeed">
 					Add Feed: <g:textField name="url" /> <g:submitButton name="Add"></g:submitButton>
 				</g:form>
-				<h4>Subscribed:</h3>
+				<h4>Subscribed:</h4>
 				<ul>
 					<g:each in="${subscribedFeeds}" var="feed">
 						<li>${feed}</li>
