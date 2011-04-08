@@ -3,15 +3,6 @@ package daily.groove
 import static daily.groove.Constants.*
 
 class ArticleController {
-    private static final SAMPLE_FEEDS = [
-            "http://feeds.bbci.co.uk/news/rss.xml": "BBC News",
-            "http://www.theregister.co.uk/headlines.rss": "The Register",
-            "http://www.theonion.com/feeds/daily/": "The Onion",
-            "http://grails.org/plugin/latest?format=rss": "Grails Plugins",
-            "http://groovyblogs.org/feed/rss": "Groovy Blogs",
-            "http://rss.slashdot.org/Slashdot/slashdot": "Slashdot",
-            "http://blog.springsource.com/feed/": "SpringSource Team Blog"]
-
     def articleService
     def redis
 
@@ -56,16 +47,5 @@ class ArticleController {
     
     def sampleFeed = {
         render template:"sampleFeed", model:[sampleFeed:articleService.randomSampleFeed()]
-    }
-    
-    def loadData = {
-        if (!redis.scard(SAMPLE_FEEDS_KEY)) {
-            SAMPLE_FEEDS.each { url, name ->
-                redis.set url, name
-                redis.sadd SAMPLE_FEEDS_KEY, url
-            }
-        }
-        
-        redirect action: "all"
     }
 }
