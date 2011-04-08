@@ -15,6 +15,7 @@ grails.project.dependency.resolution = {
     plugins {
         compile ":redis:1.0.0.M2"
         runtime ":blueprint:1.0.2",
+                ":quartz:0.4.2",
                 ":resources:1.0-RC2-SNAPSHOT",
                 ":cached-resources:1.0-alpha6",
                 ":zipped-resources:1.0-RC1",

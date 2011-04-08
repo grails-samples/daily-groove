@@ -10,6 +10,7 @@ class Article {
     boolean unread = true
     
     static mapping = {
+        title index:true
         unread index:true
     }
     

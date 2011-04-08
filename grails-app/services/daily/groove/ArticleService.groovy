@@ -5,17 +5,22 @@ import static daily.groove.Constants.*
 class ArticleService {
     def redis
 
-    def loadFeed(url, rss) {
-        for (item in rss.channel.item) {
-            def a = new Article(title: item.title.text(),
-                    body: item.description.text(),
-                    link: new URL(item.link.text())).save()
-        }
+    def loadFeed(url) {
+        saveArticles url
         
+        // Add the feed URL to the database. If it's one of the sample feeds
+        // then the URL key will already be there - in which case we don't
+        // want to add it again.
         if (!redis.exists(url)) {
             redis.set url, rss.channel.title.text()
         }
         redis.sadd SUBSCRIBED_FEEDS_KEY, url
+    }
+    
+    def refreshFeed(url) {
+        if (!redis.exists(url)) throw new IllegalStateException("Cannot refresh feed '${url}' because it hasn't been subscribed to!")
+        
+        saveArticles url
     }
     
     def randomSampleFeed() {
@@ -35,5 +40,20 @@ class ArticleService {
     
     def subscribedFeeds() {
         return redis.smembers(SUBSCRIBED_FEEDS_KEY).collect { feedUrl -> new Expando(name: redis.get(feedUrl), url: feedUrl) }
+    }
+    
+    private saveArticles(feedUrl) {
+        def rss = new XmlSlurper().parseText(new URL(feedUrl).text)
+        
+        redis.multi()
+        for (item in rss.channel.item) {
+            if (!Article.findByTitle(item.title.text())) {
+                new Article(
+                        title: item.title.text(),
+                        body: item.description.text(),
+                        link: new URL(item.link.text())).save()
+            }
+        }
+        redis.exec()
     }
 }

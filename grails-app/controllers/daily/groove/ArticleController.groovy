@@ -21,13 +21,13 @@ class ArticleController {
     
     def addFeed = {
         try {
-            articleService.loadFeed(params.url, new XmlSlurper().parseText(new URL(params.url).text))
+            articleService.loadFeed(url)
         }
         catch(e) {
             flash.message = "Error processing feed. Please try again later."
             log.error("Error processing feed: ${e.message}", e)
         }
-        redirect(action:'all')        
+        redirect action: "all"        
     }
     
     def all = {
