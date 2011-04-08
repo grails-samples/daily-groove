@@ -21,7 +21,7 @@ class ArticleController {
     
     def addFeed = {
         try {
-            articleService.loadFeed(url)
+            articleService.loadFeed(params.url)
         }
         catch(e) {
             flash.message = "Error processing feed. Please try again later."

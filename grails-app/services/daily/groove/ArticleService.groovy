@@ -6,7 +6,7 @@ class ArticleService {
     def redis
 
     def loadFeed(url) {
-        saveArticles url
+        def rss = saveArticles( url )
         
         // Add the feed URL to the database. If it's one of the sample feeds
         // then the URL key will already be there - in which case we don't
@@ -55,5 +55,7 @@ class ArticleService {
             }
         }
         redis.exec()
+
+		return rss
     }
 }
