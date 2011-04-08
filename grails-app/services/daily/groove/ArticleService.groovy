@@ -6,13 +6,13 @@ class ArticleService {
     def redis
 
     def loadFeed(url) {
-        def rss = saveArticles( url )
+        def feedTitle = saveArticles(url)
         
         // Add the feed URL to the database. If it's one of the sample feeds
         // then the URL key will already be there - in which case we don't
         // want to add it again.
         if (!redis.exists(url)) {
-            redis.set url, rss.channel.title.text()
+            redis.set url, feedTitle
         }
         redis.sadd SUBSCRIBED_FEEDS_KEY, url
     }
@@ -55,7 +55,7 @@ class ArticleService {
             }
         }
         redis.exec()
-
-		return rss
+        
+        return rss.channel.title.text()
     }
 }
