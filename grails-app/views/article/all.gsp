@@ -19,7 +19,6 @@ function updateSampleFeed() {
 			  	  	  jQuery(this).html(data).fadeIn(500);
 			  	  });
 			  },
-			  error: function(req, textStatus, err) { alert('AJAX error: ' + err); },
 			  type: 'GET'
 			});
 }
