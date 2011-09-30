@@ -60,10 +60,8 @@ class ArticleService {
             }
         }
 
-        Article.withTransaction { status ->
-            for (article in articles) {
-                article.save()
-            }
+        for (article in articles) {
+            article.save()
         }
 
         return rss.channel.title.text()
